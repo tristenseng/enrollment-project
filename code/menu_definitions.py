@@ -27,6 +27,7 @@ add_menu = Menu('add', 'Please indicate what you want to add:', [
     Option("Major", "add_major(db)"),
     Option("Student", "add_student(db)"),
     Option("Section", "add_section(db)"),
+    Option("Enrollment", "add_enrollment(db)"),
     Option("Exit", "pass")
 ])
 
@@ -45,5 +46,6 @@ list_menu = Menu('list', 'Please indicate what you want to list:', [
     Option("Section", "list_course_sections(db)"),
     Option("Major", "list_major(db)"),
     Option("Student", "list_student(db)"),
+    Option("Enrollment", "list_enrollment(db)"),
     Option("Exit", "pass")
 ])

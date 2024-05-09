@@ -339,15 +339,23 @@ def add_enrollment(db):
     collection = db["sections"]
     student = select_student(db)
     section = select_section(db)
-    enrollment = section['enrollment']
     pass_fail: datetime
     decision = input("Is this student to be graded by pass/fail? Input 'y' or 'n' --> ")
     if decision == "y":
-        pass_fail = datetime.now().date()
-        collection.update_one({"_id": section['_id']}, {"$push": {"enrollment": {"student": student, "pass_fail": pass_fail}}})
+        pass_fail = datetime.now()
+        enrollment_data = {'student': student, 'pass_fail': pass_fail}
     elif decision == "n":
         letter_grade = input("What is considered a satisfactory grade for this student? Input A, B or C ---> ")
-        collection.update_one({"_id": section['_id']}, {"$push": {"enrollment": {"student": student, "letter_grade": letter_grade}}})
+        enrollment_data = {'student': student, 'letter_grade': letter_grade}
+    try:
+        print('Enrollment successful')
+        collection.update_one({'_id': section['_id']}, {'$push': {'enrollment': enrollment_data}})
+    except Exception as e:
+        print(e)
+
+
+
+
 
 def list_enrollments(db):
     section = select_section(db)
@@ -475,7 +483,7 @@ def select_section(db):
     section_num: int = 0
     semester: str = ''
     sectionYear: int = 0
-    while not found or not unique_course or unique_abbr:
+    while not found or not unique_course or not unique_abbr:
         dep_abbr = input("Department abbreviation--> ")
         abbr_count: int = collection.count_documents({"department_abbreviation": dep_abbr})
         unique_abbr = abbr_count == 1
@@ -821,6 +829,8 @@ if __name__ == '__main__':
     #                           ('enrollments.students.student_id', pymongo.ASCENDING)],
     #                          unique=True, name='sections_uk_05')
     #pprint(sections.index_information())
+
+
     main_action: str = ''
     while main_action != menu_main.last_action():
         main_action = menu_main.menu_prompt()

@@ -1,0 +1,10 @@
+.DS_store
+
+.idea
+
+__pycache__
+
+*.py[cod]   # Ignores .pyc, .pyo, and .pyd files
+*.pyc       # Ignores .pyc files
+*.pyo       # Ignores .pyo (optimized) files
+*.pyd       # Ignores .pyd (Python DLL) files

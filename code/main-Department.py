@@ -358,7 +358,7 @@ def delete_enrollment(db):
     collection = db["sections"]
     section = select_section(db)
     student = select_student(db)
-    sections.update_one(
+    collection.update_one(
         {'_id': section['_id']}, {"$pull": {"enrollment": {"student": student}}}
     )
 
@@ -736,7 +736,7 @@ if __name__ == '__main__':
     # As a test that the connection worked, print out the database names.
     print(client.list_database_names())
     # db will be the way that we refer to the database from here on out.
-
+    db = client['323']
     # Print off the collections that we have available to us, again more of a test than anything.
     print(db.list_collection_names())
     # student is our students collection within this database.
@@ -746,71 +746,71 @@ if __name__ == '__main__':
     department_count = departments.count_documents({})
 
     # ************************** Set up the students collection
-    departments_indexes = departments.index_information()
-    if 'departments_abbreviations' in departments_indexes.keys():
-        print("abbreviation index present.")
-    else:
-        # Create a single UNIQUE index on BOTH the last name and the first name.
-        departments.create_index([('abbreviation', pymongo.ASCENDING)], unique=True, name="departments_abbreviations")
+    # departments_indexes = departments.index_information()
+    # if 'departments_abbreviations' in departments_indexes.keys():
+    #     print("abbreviation index present.")
+    # else:
+    #     # Create a single UNIQUE index on BOTH the last name and the first name.
+    #     departments.create_index([('abbreviation', pymongo.ASCENDING)], unique=True, name="departments_abbreviations")
 
-    if 'departments_chair_names' in departments_indexes.keys():
-        print("chair name index present.")
-    else:
-        # Create a UNIQUE index on just the e-mail address
-        departments.create_index([('chair_name', pymongo.ASCENDING)], unique=True, name='departments_chair_names')
+    # if 'departments_chair_names' in departments_indexes.keys():
+    #     print("chair name index present.")
+    # else:
+    #     # Create a UNIQUE index on just the e-mail address
+    #     departments.create_index([('chair_name', pymongo.ASCENDING)], unique=True, name='departments_chair_names')
 
-    if 'departments_buildings_and_offices' in departments_indexes.keys():
-        print("building and office index present.")
-    else:
-        # Create a single UNIQUE index on BOTH the last name and the first name.
-        departments.create_index([('building', pymongo.ASCENDING), ('office', pymongo.ASCENDING)],
-                                 unique=True, name="departments_buildings_and_offices")
+    # if 'departments_buildings_and_offices' in departments_indexes.keys():
+    #     print("building and office index present.")
+    # else:
+    #     # Create a single UNIQUE index on BOTH the last name and the first name.
+    #     departments.create_index([('building', pymongo.ASCENDING), ('office', pymongo.ASCENDING)],
+    #                              unique=True, name="departments_buildings_and_offices")
 
-    if 'departments_descriptions' in departments_indexes.keys():
-        print("description index present.")
-    else:
-        departments.create_index([('description', pymongo.ASCENDING)], unique=True, name="departments_descriptions")
+    # if 'departments_descriptions' in departments_indexes.keys():
+    #     print("description index present.")
+    # else:
+    #     departments.create_index([('description', pymongo.ASCENDING)], unique=True, name="departments_descriptions")
 
-    pprint(departments.index_information())
-    # ************************** Set up the courses collection
-    courses = db["courses"]
-    course_count = courses.count_documents({})
-    courses_indexes = courses.index_information()
-    if 'courses_uk_01' in courses_indexes.keys():
-        print("department abbreviation/course number index present.")
-    else:
-        courses.create_index([('department_abbreviation', pymongo.ASCENDING), ('course_number', pymongo.ASCENDING)],
-                             unique=True, name='courses_uk_01')
-    if 'courses_uk_02' in courses_indexes.keys():
-        print("department abbreviation/course name index present.")
-    else:
-        courses.create_index([('department_abbreviation', pymongo.ASCENDING), ('course_name', pymongo.ASCENDING)],
-                             unique=True, name='courses_uk_02')
-    pprint(courses.index_information())
-    # ************************** Set up the sections collection
-    sections = db["sections"]
-    section_count = sections.count_documents({})
-    sections_indexes = sections.index_information()
-    if 'sections_uk_01' in sections_indexes.keys():
-        print("course-section number-semester-year index present.")
-    else:
-        sections.create_index([('course', pymongo.ASCENDING), ('section_number', pymongo.ASCENDING),
-                               ('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING)],
-                              unique=True, name='sections_uk_01')
-    if 'sections_uk_02' in sections_indexes.keys():
-        print("semester-year-building-room-schedule-start time index present.")
-    else:
-        sections.create_index([('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING),
-                               ('building', pymongo.ASCENDING), ('room', pymongo.ASCENDING),
-                               ('schedule', pymongo.ASCENDING), ('start_time', pymongo.ASCENDING)],
-                              unique=True, name='sections_uk_02')
-    if 'sections_uk_03' in sections_indexes.keys():
-        print("semester-year-schedule-start time-instructor index present.")
-    else:
-        sections.create_index([('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING),
-                               ('schedule', pymongo.ASCENDING), ('start_time', pymongo.ASCENDING),
-                               ('instructor', pymongo.ASCENDING)],
-                              unique=True, name='sections_uk_03')
+    # pprint(departments.index_information())
+    # # ************************** Set up the courses collection
+    # courses = db["courses"]
+    # course_count = courses.count_documents({})
+    # courses_indexes = courses.index_information()
+    # if 'courses_uk_01' in courses_indexes.keys():
+    #     print("department abbreviation/course number index present.")
+    # else:
+    #     courses.create_index([('department_abbreviation', pymongo.ASCENDING), ('course_number', pymongo.ASCENDING)],
+    #                          unique=True, name='courses_uk_01')
+    # if 'courses_uk_02' in courses_indexes.keys():
+    #     print("department abbreviation/course name index present.")
+    # else:
+    #     courses.create_index([('department_abbreviation', pymongo.ASCENDING), ('course_name', pymongo.ASCENDING)],
+    #                          unique=True, name='courses_uk_02')
+    # pprint(courses.index_information())
+    # # ************************** Set up the sections collection
+    # sections = db["sections"]
+    # section_count = sections.count_documents({})
+    # sections_indexes = sections.index_information()
+    # if 'sections_uk_01' in sections_indexes.keys():
+    #     print("course-section number-semester-year index present.")
+    # else:
+    #     sections.create_index([('course', pymongo.ASCENDING), ('section_number', pymongo.ASCENDING),
+    #                            ('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING)],
+    #                           unique=True, name='sections_uk_01')
+    # if 'sections_uk_02' in sections_indexes.keys():
+    #     print("semester-year-building-room-schedule-start time index present.")
+    # else:
+    #     sections.create_index([('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING),
+    #                            ('building', pymongo.ASCENDING), ('room', pymongo.ASCENDING),
+    #                            ('schedule', pymongo.ASCENDING), ('start_time', pymongo.ASCENDING)],
+    #                           unique=True, name='sections_uk_02')
+    # if 'sections_uk_03' in sections_indexes.keys():
+    #     print("semester-year-schedule-start time-instructor index present.")
+    # else:
+    #     sections.create_index([('semester', pymongo.ASCENDING), ('section_year', pymongo.ASCENDING),
+    #                            ('schedule', pymongo.ASCENDING), ('start_time', pymongo.ASCENDING),
+    #                            ('instructor', pymongo.ASCENDING)],
+    #                           unique=True, name='sections_uk_03')
     # if 'sections_uk_05' in sections_indexes.keys():
     #    print("semester-year-dept abbreviation-course number-student id index present.")
 
@@ -820,7 +820,7 @@ if __name__ == '__main__':
     #                           ('course.course_number', pymongo.ASCENDING),
     #                           ('enrollments.students.student_id', pymongo.ASCENDING)],
     #                          unique=True, name='sections_uk_05')
-    pprint(sections.index_information())
+    #pprint(sections.index_information())
     main_action: str = ''
     while main_action != menu_main.last_action():
         main_action = menu_main.menu_prompt()

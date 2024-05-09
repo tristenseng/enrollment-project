@@ -349,7 +349,7 @@ def add_enrollment(db):
         enrollment_data = {'student': student, 'letter_grade': letter_grade}
     try:
         print('Enrollment successful')
-        collection.update_one({'_id': section['_id']}, {'$push': {'enrollment': enrollment_data}})
+        collection.update_one({'_id': section['_id']}, {'$push': {'enrollments': enrollment_data}})
     except Exception as e:
         print(e)
 
@@ -357,9 +357,9 @@ def add_enrollment(db):
 
 
 
-def list_enrollments(db):
+def list_enrollment(db):
     section = select_section(db)
-    for student in section.enrollments.student:
+    for student in section["enrollments"]:
         print(student)
 
 def delete_enrollment(db):
@@ -367,7 +367,7 @@ def delete_enrollment(db):
     section = select_section(db)
     student = select_student(db)
     collection.update_one(
-        {'_id': section['_id']}, {"$pull": {"enrollment": {"student": student}}}
+        {'_id': section['_id']}, {"$pull": {"enrollments": {"student": student}}}
     )
 
 def add_section(db):

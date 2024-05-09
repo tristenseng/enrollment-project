@@ -366,9 +366,12 @@ def delete_enrollment(db):
     collection = db["sections"]
     section = select_section(db)
     student = select_student(db)
-    collection.update_one(
-        {'_id': section['_id']}, {"$pull": {"enrollments": {"student": student}}}
-    )
+    try:
+        collection.update_one(
+            {'_id': section['_id']}, {"$pull": {"enrollments": {"student": student}}}
+        )
+    except Exception as e:
+        print(e)
 
 def add_section(db):
     collection = db["sections"]
